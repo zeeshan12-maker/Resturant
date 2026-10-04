@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMBER — Grill & Kebab</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  body{background:#0a0a0a;color:#fff;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif}
+  /* warm fallback so a slide is never plain black if an image fails */
+  .ph{background:linear-gradient(135deg,#7a3200,#3a1700 55%,#120700)}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:999px;padding:.65rem 1.25rem;font-size:.875rem;font-weight:500;transition:all .3s;cursor:pointer}
+  .btn-gold{background:linear-gradient(90deg,#ff7b00,#d4af37);color:#000;box-shadow:0 0 24px rgba(255,123,0,.35)}
+  .btn-gold:hover{box-shadow:0 0 36px rgba(255,123,0,.6)}
+  .btn-out{border:1px solid rgba(212,175,55,.6);color:#d4af37}
+  .btn-out:hover{background:#d4af37;color:#000}
+  .btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid #ff7b00;outline-offset:2px}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  .fade-up{animation:fadeUp .9s ease both}
+  .slide{transition:opacity 1s}
+  /* dish card reveal: always visible on touch, on hover for desktop */
+  .reveal{display:grid;grid-template-rows:1fr;transition:grid-template-rows .5s}
+  @media(min-width:768px){.reveal{grid-template-rows:0fr}.card:hover .reveal{grid-template-rows:1fr}}
+  .reveal>div{overflow:hidden}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="absolute inset-x-0 top-0 z-30">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 md:px-10">
+    <a href="#home" class="serif flex items-center gap-2 text-3xl font-bold tracking-[0.18em]">
+      <i data-lucide="flame" class="h-5 w-5 text-[#ff7b00]"></i> EMBER
+    </a>
+    <nav class="hidden gap-9 lg:flex" id="nav">
+      <a href="#home" class="text-sm text-white/75 hover:text-[#d4af37]">Home</a>
+      <a href="#cuisines" class="text-sm text-white/75 hover:text-[#d4af37]">Cuisines</a>
+      <a href="#specials" class="text-sm text-white/75 hover:text-[#d4af37]">Specials</a>
+      <a href="#chef" class="text-sm text-white/75 hover:text-[#d4af37]">Chef</a>
+      <a href="#contact" class="text-sm text-white/75 hover:text-[#d4af37]">Contact</a>
+    </nav>
+    <div class="hidden items-center gap-3 lg:flex">
+      <button class="btn btn-out">Sign In</button>
+      <button class="btn btn-gold">Book a Table</button>
+    </div>
+    <button id="menuBtn" aria-label="Toggle menu" class="lg:hidden"><i data-lucide="menu"></i></button>
+  </div>
+  <!-- Mobile drawer -->
+  <div id="drawer" class="mx-5 hidden rounded-2xl border border-white/10 bg-black/90 p-6 backdrop-blur lg:hidden">
+    <a href="#home" class="block py-3 text-white/80">Home</a>
+    <a href="#cuisines" class="block py-3 text-white/80">Cuisines</a>
+    <a href="#specials" class="block py-3 text-white/80">Specials</a>
+    <a href="#chef" class="block py-3 text-white/80">Chef</a>
+    <a href="#contact" class="block py-3 text-white/80">Contact</a>
+    <div class="mt-4 flex gap-3"><button class="btn btn-out">Sign In</button><button class="btn btn-gold">Book a Table</button></div>
+  </div>
+</header>
+
+<!-- ================= HERO SLIDER ================= -->
+<section id="home" class="relative flex min-h-screen items-end overflow-hidden">
+  <div id="slides" class="absolute inset-0"></div>
+  <!-- light overlay so photos stay visible -->
+  <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/10 to-black/25"></div>
+
+  <div class="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 pt-40 md:px-10 md:pb-24">
+    <div class="flex items-end gap-6 md:gap-10">
+      <div class="serif hidden pb-3 md:block">
+        <span id="num" class="text-5xl text-[#d4af37]">01</span>
+        <span class="text-xl text-white/40"> / 03</span>
+      </div>
+      <div id="copy">
+        <h1 class="serif text-6xl font-bold leading-[.95] sm:text-7xl lg:text-9xl">
+          <span id="t1"></span><br><span id="t2" class="text-[#d4af37]"></span>
+        </h1>
+        <p id="txt" class="mt-6 max-w-md text-base leading-relaxed text-white/70 md:text-lg"></p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button class="btn btn-gold">Book a Table <i data-lucide="arrow-up-right" class="h-4 w-4"></i></button>
+          <button class="btn btn-out">View the Menu</button>
+        </div>
+      </div>
+    </div>
+    <div class="mt-14 flex items-center justify-between">
+      <div id="dots" class="flex gap-2"></div>
+      <div class="flex gap-3">
+        <button id="prev" aria-label="Previous" class="grid h-12 w-12 place-items-center rounded-full border border-white/25 transition hover:border-[#d4af37] hover:text-[#d4af37]"><i data-lucide="chevron-left"></i></button>
+        <button id="next" aria-label="Next" class="grid h-12 w-12 place-items-center rounded-full border border-white/25 transition hover:border-[#d4af37] hover:text-[#d4af37]"><i data-lucide="chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CUISINES GRID ================= -->
+<section id="cuisines" class="px-5 py-24 md:px-10">
+  <div class="mx-auto max-w-7xl">
+    <div class="mb-14 max-w-xl">
+      <h2 class="serif text-4xl md:text-6xl">From the fire</h2>
+      <p class="mt-4 text-white/60">Three plates our guests order before they open the menu.</p>
+    </div>
+    <div id="grid" class="grid gap-6 md:grid-cols-3"></div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact" class="border-t border-white/10 bg-[#070707] px-5 pb-10 pt-20 md:px-10">
+  <div class="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <div class="serif flex items-center gap-2 text-3xl font-bold tracking-[0.18em]"><i data-lucide="flame" class="h-5 w-5 text-[#ff7b00]"></i> EMBER</div>
+      <p class="mt-4 text-sm leading-relaxed text-white/55">Flame-grilled, slow-rested, served without hurry.</p>
+      <div class="mt-6 flex gap-3">
+        <a href="#" aria-label="Instagram" class="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 hover:border-[#d4af37] hover:text-[#d4af37]"><i data-lucide="instagram" class="h-4 w-4"></i></a>
+        <a href="#" aria-label="Facebook" class="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 hover:border-[#d4af37] hover:text-[#d4af37]"><i data-lucide="facebook" class="h-4 w-4"></i></a>
+        <a href="#" aria-label="Twitter" class="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-white/70 hover:border-[#d4af37] hover:text-[#d4af37]"><i data-lucide="twitter" class="h-4 w-4"></i></a>
+      </div>
+    </div>
+    <div class="text-sm text-white/60">
+      <h4 class="mb-4 flex items-center gap-2 text-base text-white"><i data-lucide="clock" class="h-4 w-4 text-[#d4af37]"></i> Opening hours</h4>
+      <p>Mon – Thu: 5 pm – 11 pm</p><p class="mt-1">Fri – Sat: 5 pm – 1 am</p><p class="mt-1">Sunday: 1 pm – 10 pm</p>
+    </div>
+    <div class="text-sm text-white/60">
+      <h4 class="mb-4 flex items-center gap-2 text-base text-white"><i data-lucide="map-pin" class="h-4 w-4 text-[#d4af37]"></i> Find us</h4>
+      <p>24 Ember Lane, Old Market Quarter</p><p class="mt-1">Your City, 000000</p>
+      <p class="mt-3 flex items-center gap-2"><i data-lucide="phone" class="h-3.5 w-3.5"></i> +00 000 000 0000</p>
+    </div>
+    <div>
+      <h4 class="mb-4 text-base">Get invited to private fire nights</h4>
+      <form id="news" class="flex overflow-hidden rounded-full border border-white/20 focus-within:border-[#d4af37]">
+        <input type="email" required placeholder="Your email" aria-label="Email address" class="min-w-0 flex-1 bg-transparent px-5 py-3 text-sm placeholder:text-white/35 focus:outline-none">
+        <button aria-label="Subscribe" class="px-4 text-[#ff7b00] hover:text-[#d4af37]"><i data-lucide="send" class="h-[18px] w-[18px]"></i></button>
+      </form>
+      <p id="thanks" class="hidden text-sm text-[#d4af37]">You're on the list. Check your inbox.</p>
+    </div>
+  </div>
+  <p class="mx-auto mt-16 max-w-7xl border-t border-white/10 pt-6 text-xs text-white/35">© <span id="yr"></span> EMBER Grill & Kebab. All rights reserved.</p>
+</footer>
+
+<script>
+/* ---------- Content ----------
+   TIP: apni photos images/ folder me rakho aur paths yaha do,
+   e.g. "images/chicken-kebab.jpg" — local images hamesha load hoti hain. */
+const IMG = {
+  kebab: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=1800&q=80",
+  steak: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1800&q=80",
+  bread: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1800&q=80",
+};
+const SLIDES = [
+  {t:["THE GRILL","& KEBAB"], text:"Hand-skewered cuts, turned over live charcoal until the edges blister and the centre stays tender.", img:IMG.kebab},
+  {t:["FIRE &","SMOKE"],      text:"Dry-aged beef, seared hard on oak embers and finished with a pour of slow-reduced pepper jus.",     img:IMG.steak},
+  {t:["SAUCE","& SILK"],      text:"House sauces made daily from roasted peppers, pomegranate and cold-pressed oils, poured at your table.", img:IMG.bread},
+];
+const DISHES = [
+  {name:"Signature Shish Kebab", price:"$28", desc:"Lamb shoulder, sumac onions, charred tomato, saffron rice.", img:IMG.kebab},
+  {name:"Flame-Grilled Steak",   price:"$54", desc:"35-day dry-aged ribeye, bone marrow butter, smoked salt.",   img:IMG.steak},
+  {name:"Fire-Roasted Flatbread",price:"$16", desc:"Blistered in the tandoor, brushed with garlic and thyme oil.", img:IMG.bread},
+];
+
+/* helper: <img> that hides itself on error so the warm gradient shows */
+const photo = (src, alt, cls="") =>
+  `<img src="${src}" alt="${alt}" loading="lazy" onerror="this.style.display='none'" class="h-full w-full object-cover ${cls}">`;
+
+/* ---------- Hero slider ---------- */
+let i = 0, timer;
+const $ = id => document.getElementById(id);
+$("slides").innerHTML = SLIDES.map((s,k)=>
+  `<div class="slide ph absolute inset-0 ${k?'opacity-0':''}">${photo(s.img,"")}</div>`).join("");
+$("dots").innerHTML = SLIDES.map((_,k)=>
+  `<button aria-label="Slide ${k+1}" data-i="${k}" class="h-1.5 rounded-full transition-all duration-500"></button>`).join("");
+
+function show(n){
+  i = (n + SLIDES.length) % SLIDES.length;
+  [...$("slides").children].forEach((el,k)=> el.style.opacity = k===i ? 1 : 0);
+  [...$("dots").children].forEach((d,k)=> d.className = "h-1.5 rounded-full transition-all duration-500 " + (k===i ? "w-10 bg-[#ff7b00]" : "w-4 bg-white/30 hover:bg-white/60"));
+  $("num").textContent = String(i+1).padStart(2,"0");
+  $("t1").textContent = SLIDES[i].t[0]; $("t2").textContent = SLIDES[i].t[1]; $("txt").textContent = SLIDES[i].text;
+  const c = $("copy"); c.classList.remove("fade-up"); void c.offsetWidth; c.classList.add("fade-up"); // restart entrance
+}
+function restart(){ clearInterval(timer); timer = setInterval(()=>show(i+1), 6000); }
+$("prev").onclick = ()=>{ show(i-1); restart(); };
+$("next").onclick = ()=>{ show(i+1); restart(); };
+$("dots").onclick = e => { const b = e.target.closest("button"); if(b){ show(+b.dataset.i); restart(); } };
+show(0); restart();
+
+/* ---------- Cuisines grid ---------- */
+$("grid").innerHTML = DISHES.map(d=>`
+  <article class="card group relative aspect-[3/4] overflow-hidden rounded-3xl ph">
+    ${photo(d.img, d.name, "transition-transform duration-700 group-hover:scale-110")}
+    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 p-6">
+      <div class="flex items-baseline justify-between gap-4">
+        <h3 class="serif text-3xl">${d.name}</h3><span class="serif text-xl text-[#d4af37]">${d.price}</span>
+      </div>
+      <div class="reveal"><div>
+        <p class="mt-3 text-sm leading-relaxed text-white/70">${d.desc}</p>
+        <button class="btn btn-gold mt-4">Order Now</button>
+      </div></div>
+    </div>
+    <div class="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/10 transition group-hover:ring-[#ff7b00]/60"></div>
+  </article>`).join("");
+
+/* ---------- Mobile menu, newsletter, footer year ---------- */
+$("menuBtn").onclick = ()=> $("drawer").classList.toggle("hidden");
+$("drawer").onclick = e => { if(e.target.tagName==="A") $("drawer").classList.add("hidden"); };
+$("news").onsubmit = e => { e.preventDefault(); $("news").classList.add("hidden"); $("thanks").classList.remove("hidden"); }; // TODO: connect to newsletter API
+$("yr").textContent = new Date().getFullYear();
+
+lucide.createIcons();
+</script>
+</body>
+</html>
